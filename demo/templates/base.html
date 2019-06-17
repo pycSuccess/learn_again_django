@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <title>title</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            width: 100%;
+            height: 60px;
+            background-color: #369;
+        }
+
+        .title {
+
+            line-height: 60px;
+            color: white;
+            font-weight: 100;
+            margin-left: 20px;
+            font-size: 20px;
+        }
+        .container{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <p class="title">
+        路飞学诚
+    </p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-danger">
+                <div class="panel-heading"><a href="http://127.0.0.1:8008/index/">首页</a></div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading"><a href="http://127.0.0.1:8008/authors/">作者</a></div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading"><a href="http://127.0.0.1:8008/articles/">文章管理</a></div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+           {% block content %}
+
+           {% endblock %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
