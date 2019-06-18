@@ -1,13 +1,15 @@
 from django.shortcuts import render,HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
-from django.db.models import Sum,Min,Max,Avg
+from django.db.models import Sum,Min,Max,Avg,Count
 # Create your views here.
 
 
 from blog.models import Book
 from blog.models import Emp
 from blog.models import Publish
+from blog.models import Author
+from blog.models import AuthorDetail
 
 
 def index(request):
@@ -109,3 +111,71 @@ def test_annotate(request):
 # F就是能够直接获取对应参数的值并且计算作为参数值  Q就是增强筛选括起来之后可以使用 & | ~ 与或非
 def test_f_q(request):
     return  HttpResponse('f  q')
+
+
+def test_son_select(request):
+    # book = Book.objects.filter(id=3).first()
+    # print(book.price)
+    # print(book.authors.all())
+    # print(book.publish)
+
+    # 主要是针对一对多情况的 正向查（从表存在该字段）和反向查（没有该字段使用从表名_set.all()获取全部数据）
+    # 查询西游记这本书的出版社的名字
+    # book = Book.objects.filter(title='西游记').first()
+    # name = book.publish.name
+    # print(name)
+    # print(Book.objects.filter(title='python').first().publish.name)
+    # name =Publish.objects.filter(book__title='西游记').values('name')
+    # print(name)
+    # 查询与西瓜出版社关联的所有书籍的名字
+    publish = Publish.objects.filter(name='榴莲出版社').first()
+    name = publish.book_set.all().values_list('title')
+    print(name)
+    return HttpResponse('over')
+
+
+def test_manytomany(request):
+    # 查询西游记这本书籍的所有作者的姓名和年龄
+    # result = Book.objects.filter(title='西游记').first().authors.all().values('name','age')
+    # print(result)
+    # book = Book.objects.filter(title='西游记').first()
+    # print(book)
+    # result = book.authors.all().values('name', 'age')
+    # print(result)
+    # print(type(Book.objects.filter(title='西游记').first().authors))
+    # result = Author.objects.filter(book__title='西游记').values('name', 'age')
+    # print(result)
+
+    # 查询作者xiao出版过的所有书籍名称
+    result = Author.objects.filter(name='hong').first().book_set.all().values('title')
+    print(result)
+    return HttpResponse('many to many')
+
+
+def test_onetoone(request):
+    '''
+
+    由于是一对一的关系所以不存在_set拼接且用all获取 直接获取的是对象进行.属性即可
+    :param request:
+    :return:
+    '''
+
+    # 查询hong的女朋友的名字
+    # gf_name = Author.objects.filter(name='hong').first().ad.gf
+    # print(gf_name)
+    # 查询手机号为112的作者名字
+    author_name = AuthorDetail.objects.filter(tel='13145').first().author.name
+    au_name = AuthorDetail.objects.filter(tel='13145').values('author__name')
+    print(author_name)
+    print(au_name)
+    return HttpResponse('test one to one')
+
+
+def test_jointable(request):
+    # 查询榴莲出版社出版过的所有书籍的名字以及作者的姓名
+    # result = Publish.objects.filter(name__contains='榴莲出版社').values_list('book__title', 'book__authors__name')
+    # print(result)
+    # 查询每一本书籍的名称以及作者个数 分组后再进行filter使用的是having
+    result = Book.objects.values('id').annotate(count=Count('authors__id')).filter(count__gt=1).values('title','count')
+    print(result)
+    return HttpResponse('test join table')
