@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test_ajax</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<button id="btn">click</button>
+<p class="con"></p>
+<script>
+    $('#btn').click(function(){
+        //发送ajax请求
+        $.ajax({
+            url:'/blog/get_date/',
+            type:'get',
+            success:function(date){
+                console.log(date)
+                $('.con').text(date)
+            }
+        })
+    })
+</script>
+</body>
+</html>

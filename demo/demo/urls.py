@@ -22,6 +22,5 @@ from blog import blog_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^index/', views.index, name='index'),
     url(r'^blog/', include(blog_urls)),  # 通过django.conf.urls.include
 ]

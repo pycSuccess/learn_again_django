@@ -2,6 +2,8 @@ from django.shortcuts import render,HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.db.models import Sum,Min,Max,Avg,Count
+import datetime
+import time
 # Create your views here.
 
 
@@ -13,16 +15,23 @@ from blog.models import AuthorDetail
 
 
 def index(request):
-    num = 100
-    return render(request, 'index.html', {'num':num})
+    if request.COOKIES.get('is_login'):
+        username = request.COOKIES.get('username')
+        return render(request, 'index.html', {'username':username})
+    url = reverse('login')
+    return redirect(url)
 
 
 def login(request):
     if request.method == 'POST':
-        print(request.POST.get('username'))
-        print(request.POST.get('password'))
-        url = reverse('index')
-        return redirect(url)
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        if username == 'mqy' and password == '123456':
+            url = reverse('index')
+            rsp = redirect(url)
+            rsp.set_cookie('is_login',True)
+            rsp.set_cookie('username', username)
+            return rsp
     return render(request, 'login.html')
 
 
@@ -179,3 +188,38 @@ def test_jointable(request):
     result = Book.objects.values('id').annotate(count=Count('authors__id')).filter(count__gt=1).values('title','count')
     print(result)
     return HttpResponse('test join table')
+
+
+def test_ajax(request):
+    return render(request, 'test_ajax.html')
+
+
+def get_date(request):
+    return HttpResponse('群山淡景')
+
+
+def test_session_index(request):
+    print(request.session.get('is_login'))
+    if request.session.get('is_login'):
+        username = request.session['username']
+        login_time = request.session['login_time']
+        print(login_time)
+        obj = {'u':username, 'l':login_time}
+        return render(request, 'index.html', {'obj':obj})
+    url = reverse('session_login')
+    return redirect(url)
+
+
+def test_session_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(password)
+        if username == 'mqy' and password == '123456':
+            request.session['username'] = username
+            request.session['login_time'] = str(datetime.datetime.now())
+            request.session['is_login'] = True
+            url = reverse('session_index')
+            print(url)
+            return redirect(url)
+    return render(request, 'login.html')
