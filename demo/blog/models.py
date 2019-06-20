@@ -39,3 +39,7 @@ class Emp(models.Model):
     dep = models.CharField(max_length=32)
     province = models.CharField(max_length=32)
 
+
+class UserInfo(models.Model):
+    user = models.CharField(max_length=32)
+    pwd = models.CharField(max_length=32)

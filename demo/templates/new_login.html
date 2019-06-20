@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>new_login</title>
+    <style type="text/css">
+        input{
+            width:50px
+        }
+    </style>
+    <script type="text/javascript" src="/static/js/jquery-3.4.1.js"></script>
+</head>
+<body>
+    用户名：<input type="text" name="user" id="user"/>
+    密码： <input type="text" name="pwd"/>
+    {% csrf_token %}
+    <input type="button" value="提交" id="submit">
+    <script type="text/javascript">
+
+        $('#submit').click(function () {
+            var user = $('#user').val();
+            var pwd = $('input:eq(1)').val();
+            var csrf = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                url:'/blog/new_login/',
+                type:'post',
+                data:{
+                    user:user,
+                    pwd:pwd,
+                    csrfmiddlewaretoken:csrf
+                },
+                success:function (data) {
+                    var user = JSON.parse(data);
+                    alert(user)
+                }
+            })
+        })
+    </script>
+</body>
+</html>

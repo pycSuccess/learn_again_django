@@ -18,5 +18,8 @@ urlpatterns = [
     url(r'^get_date/', views.get_date, name='get_date'),
     url(r'^session_login/', views.test_session_login, name='session_login'),
     url(r'^session_index/', views.test_session_index, name='session_index'),
-
+    url(r'^show_ajax/', views.show_ajax, name='show_ajax'),
+    url(r'^test_add/', views.test_add, name='test_add'),
+    url(r'^new_login/', views.new_login, name='new_login'),
+    url(r'^test_form/', views.test_form, name='test_form'),
 ]

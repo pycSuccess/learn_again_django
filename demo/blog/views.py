@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.db.models import Sum,Min,Max,Avg,Count
 import datetime
+import json
 import time
 # Create your views here.
 
@@ -12,6 +13,8 @@ from blog.models import Emp
 from blog.models import Publish
 from blog.models import Author
 from blog.models import AuthorDetail
+from blog.models import UserInfo
+from blog.blog_from import UserInfo as UiForm
 
 
 def index(request):
@@ -223,3 +226,45 @@ def test_session_login(request):
             print(url)
             return redirect(url)
     return render(request, 'login.html')
+
+
+def show_ajax(request):
+    return render(request, 'test_js_add.html')
+
+
+def test_add(request):
+    if request.method == 'GET':
+        a = request.GET.get('a')
+        b = request.GET.get('b')
+        print(a,b)
+        c = int(a)+int(b)
+    elif request.method == 'POST':
+        a = request.POST.get('a')
+        b = request.POST.get('b')
+        c = int(a) + int(b)
+    return HttpResponse(str(c))
+
+
+def new_login(request):
+    if request.method == 'POST':
+        user = request.POST.get('user')
+        pwd = request.POST.get('pwd')
+        user_is = UserInfo.objects.filter(user=user)
+        if user_is:
+            user = user_is[0]
+            print(user.pwd)
+            if pwd == user.pwd:
+                return HttpResponse(json.dumps(user.user))
+        else:
+            return HttpResponse(json.dumps('账号或密码错误'))
+    return render(request, 'new_login.html')
+
+
+def test_form(request):
+    if request.method == 'POST':
+        userInfo = UiForm(request.POST)
+        if userInfo.is_valid():
+            data = userInfo.cleaned_data
+            print(data)
+        return HttpResponse('ok')
+    return render(request, 'test_form.html')

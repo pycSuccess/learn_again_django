@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>get请求</title>
+    <script type="text/javascript" src="/static/js/jquery-3.4.1.js"></script>
+    <style type="text/css">
+            input {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id='a' name="a"/> + <input type="text" id='b' name="b"/> = <input type="text" id="c" name="c"/> <input type="button" id='cal'  value="计算"/>
+    {% csrf_token %}
+    <script type="text/javascript">
+        $('#cal').click(function () {
+            var a = $('input:eq(0)').val();
+            var b = $('#b').val();
+            var csrf = $("[name=csrfmiddlewaretoken]").val();
+            console.log(a,b)
+            $.ajax({
+                url:'/blog/test_add/',
+                type:'post',
+                data:{
+                    a:a,
+                    b:b,
+                    csrfmiddlewaretoken:csrf
+                },
+                success:function (date) {
+                    $('#c').val(date)
+                }
+            })
+        })
+    </script>
+</body>
+</html>
