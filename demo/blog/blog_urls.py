@@ -22,4 +22,9 @@ urlpatterns = [
     url(r'^test_add/', views.test_add, name='test_add'),
     url(r'^new_login/', views.new_login, name='new_login'),
     url(r'^test_form/', views.test_form, name='test_form'),
+    url(r'^test_auth/', views.test_auth, name='test_auth'),
+    url(r'^test_auth_index/', views.test_auth_index, name='test_auth_index'),
+    url(r'^test_bulk_create/', views.test_bulk_create, name='test_bulk_create'),
+    url(r'^test_paginator/', views.test_paginator, name='test_paginator'),
+
 ]

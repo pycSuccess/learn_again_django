@@ -4,6 +4,8 @@ from django.shortcuts import redirect
 from django.db.models import Sum,Min,Max,Avg,Count
 import datetime
 import json
+from django.contrib import auth
+from django.core.paginator import Paginator
 import time
 # Create your views here.
 
@@ -268,3 +270,54 @@ def test_form(request):
             print(data)
         return HttpResponse('ok')
     return render(request, 'test_form.html')
+
+
+# django.contrib.auth 主要提供 auth.authenticate（username,password） 获取查询对象
+# 通过auth.login(request,user) 将关系绑定成session形式 全局变量request.user
+# 通过auth.is_authenticated 属性来判断是否检测成功
+# 通过auth.logout(request) 对该请求记录进行清除类似:session.flush()
+def test_auth(request):
+    if request.method == 'POST':
+        user = request.POST.get('username')
+        pwd = request.POST.get('password')
+        ret = auth.authenticate(username=user,password=pwd)
+        if ret:
+            auth.login(request,ret)  # 绑定到session且request.ret直接获取
+            url = reverse('test_auth_index')
+            return redirect(url)
+    return render(request, 'login.html')
+
+
+def test_auth_index(request):
+    if request.user.is_authenticated:
+        print(type(request.user))
+        username = request.user.username  # 获取的时候就是直接对象点即可可以当做user对象获取相应属性
+        return render(request, 'index.html', {'username':username})
+    url = reverse('test_auth')
+    return redirect(url)
+
+
+def test_auth_logout(request):
+    auth.logout(request)  # 解除这种绑定关系
+    url = reverse('test_auth')
+    return redirect(url)
+
+
+# 通过bulk_create接收对象列表可快速创建
+def test_bulk_create(request):
+    user_list = []
+    for i in range(100):
+            user = 'mqy{}'.format(i)
+            user_list.append(UserInfo(user=user, pwd='123456'))
+    UserInfo.objects.bulk_create(user_list)
+    return HttpResponse('ok')
+
+
+def test_paginator(request):
+    users = UserInfo.objects.all()
+    paginator = Paginator(users,10)
+    data_obj = paginator.page(2)  # 返回的是第2页所有数据对象
+    print(paginator.count)  # 返回所有的数据数
+    print(paginator.num_pages)  # 返回多少页数
+    print(paginator.page_range)  # 返回一个range(1,21)
+    return render(request, 'show_paginator.html', {'users': data_obj})
