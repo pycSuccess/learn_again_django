@@ -11,5 +11,13 @@
         {% csrf_token %}
         <input type="submit" value="提交"/>
     </form>
+    <form method="post" action={% url 'test_form'%}>
+        {% csrf_token %}
+        <div>
+            {% for item in userinfo%}
+                {{item}}
+            {% endfor %}
+        </div>
+    </form>
 </body>
 </html>

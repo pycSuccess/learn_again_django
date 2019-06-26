@@ -263,13 +263,13 @@ def new_login(request):
 
 
 def test_form(request):
+    userInfo = UiForm(request.POST)
     if request.method == 'POST':
-        userInfo = UiForm(request.POST)
         if userInfo.is_valid():
             data = userInfo.cleaned_data
             print(data)
         return HttpResponse('ok')
-    return render(request, 'test_form.html')
+    return render(request, 'test_form.html', {'userinfo':userInfo})
 
 
 # django.contrib.auth 主要提供 auth.authenticate（username,password） 获取查询对象
