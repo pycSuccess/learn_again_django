@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-2">
+        <h3>添加用户</h3><br/>
+            <form action={% url 'add_user'%} method="post" >
+                {% csrf_token %}
+                {% for field in obj %}
+                    <div class="form-group">
+                        <label for="">{{ field.label }}</label>
+                        {{ field }} <span class="error pull-right">{{ field.errors.0 }}</span>
+                         {% if field.label == "确认密码" %}
+                         <span class="error pull-right">{{ g_error|default_if_none:"" }}</span>
+                         {% endif %}
+                    </div>
+                {% endfor %}
+                <br/>
+                <input type="submit" class="btn btn-success btn-sm">
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

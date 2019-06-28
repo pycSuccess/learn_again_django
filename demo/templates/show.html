@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分页展示</title>
+</head>
+<body>
+    <div>
+        {% for item in books%}
+        <p>{{item.title}} 售价 {{item.price}}</p>
+        {% endfor %}
+        {% if num == 2 %}
+            <h1>{{num}}</h1>
+        {% endif %}
+    </div>
+
+</body>
+</html>
